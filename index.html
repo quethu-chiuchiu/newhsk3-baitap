@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK3 - Luyện Tập | 新HSK教程3 学练手册</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🀄</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="zh">新HSK教程3</span>
+      Luyện Tập HSK3
+    </div>
+    <!-- lesson buttons injected by JS from LESSONS list below -->
+  </aside>
+
+  <div class="content-area">
+    <div class="topbar">
+      <div class="tab-group" id="tabGroup">
+        <button class="tab-btn" data-tab="listening">🎧 Nghe</button>
+        <button class="tab-btn" data-tab="reading">📖 Đọc</button>
+        <button class="tab-btn" data-tab="writing">✍️ Viết</button>
+      </div>
+      <span class="current-lesson" id="currentLessonLabel"></span>
+    </div>
+    <div class="frame-wrap">
+      <iframe id="lessonFrame" title="Nội dung bài học"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+// Danh sách bài học — thêm bài mới ở đây khi có nội dung.
+// file: đường dẫn tới file trong lessons/, available: true nếu đã có nội dung thật.
+const LESSONS = [
+  { id:"bai-1", num:"Bài 1", nameVi:"Simulated Practice", nameZh:"我们去机场接你们", file:"lessons/bai-1.html", available:true },
+  { id:"bai-2", num:"Bài 2", nameVi:"Simulated Practice", nameZh:"你们想吃什么就点什么", file:"lessons/bai-2.html", available:true },
+  { id:"bai-3", num:"Bài 3", nameVi:"Sắp có", nameZh:"…", file:null, available:false },
+];
+
+const DEFAULT_TAB = "reading";
+
+let state = {
+  lesson: LESSONS.find(l=>l.available) || LESSONS[0],
+  tab: DEFAULT_TAB
+};
+
+const sidebar = document.getElementById('sidebar');
+const frame = document.getElementById('lessonFrame');
+const currentLabel = document.getElementById('currentLessonLabel');
+
+function renderSidebar(){
+  LESSONS.forEach(lesson=>{
+    const btn = document.createElement('button');
+    btn.className = 'lesson-btn' + (lesson.available ? '' : ' soon') + (lesson.id === state.lesson.id ? ' active' : '');
+    btn.innerHTML = '<div class="num">'+lesson.num+'</div>' +
+      '<div class="name">'+lesson.nameVi+'<span class="zh">'+lesson.nameZh+'</span></div>';
+    if(lesson.available){
+      btn.addEventListener('click', ()=>selectLesson(lesson.id));
+    } else {
+      btn.disabled = true;
+    }
+    btn.dataset.lessonId = lesson.id;
+    sidebar.appendChild(btn);
+  });
+}
+
+function renderTabs(){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.tab === state.tab);
+    btn.addEventListener('click', ()=>selectTab(btn.dataset.tab));
+  });
+}
+
+function selectLesson(id){
+  const lesson = LESSONS.find(l=>l.id === id);
+  if(!lesson || !lesson.available) return;
+  state.lesson = lesson;
+  document.querySelectorAll('.lesson-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.lessonId === id);
+  });
+  navigate();
+}
+
+function selectTab(tab){
+  state.tab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  navigate();
+}
+
+function navigate(){
+  frame.src = state.lesson.file + '#' + state.tab;
+  currentLabel.textContent = state.lesson.num + ' · ' + state.lesson.nameZh;
+}
+
+renderSidebar();
+renderTabs();
+navigate();
+</script>
+</body>
+</html>
