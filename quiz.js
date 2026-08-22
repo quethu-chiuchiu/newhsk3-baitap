@@ -12,10 +12,14 @@ window.HSK = (function(){
     return t.content.firstChild;
   }
 
-  /* ---------- Ảnh linh hoạt định dạng file: nếu .jpg không load được,
-     tự thử lần lượt các đuôi file khác trước khi ẩn hẳn ảnh (data-base
-     giữ đường dẫn KHÔNG có đuôi, ví dụ "images/bai1/A") ---------- */
-  const IMG_EXTS = ['jpg','jpeg','JPG','JPEG','png','PNG','webp','WEBP'];
+  /* ---------- Ảnh linh hoạt định dạng file: nếu đuôi mặc định (đuôi đầu
+     tiên trong src của thẻ <img>) không load được, tự thử lần lượt các
+     đuôi file khác trước khi ẩn hẳn ảnh (data-base giữ đường dẫn KHÔNG có
+     đuôi, ví dụ "images/bai1/A"). Đặt .webp lên đầu vì đó là đuôi thật
+     đang dùng (ảnh nhẹ) — tránh tốn request thừa làm ảnh hiện chậm. Mỗi
+     trang HTML nên để đúng đuôi thật ở thẻ <img> gốc, đuôi còn lại trong
+     danh sách chỉ là lưới an toàn khi đổi định dạng sau này. ---------- */
+  const IMG_EXTS = ['webp','png','jpg','jpeg','WEBP','PNG','JPG','JPEG'];
   function imgFallback(img){
     const base = img.dataset.base;
     if(!base){ img.style.display = 'none'; return; }
