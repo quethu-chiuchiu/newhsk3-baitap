@@ -355,28 +355,41 @@ section.card{
 .text-input.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);font-weight:700;}
 
 .pic-desc{font-size:15.5px;color:var(--ink-soft);flex:1 1 260px;font-style:italic;}
+
+/* Writing Part II: ảnh lớn bên trái (cỡ giống ảnh Nghe Part I), từ gợi ý +
+   ô nhập câu bên phải */
+.writing-row{display:flex;gap:18px;align-items:stretch;flex-wrap:wrap;}
 .writing-pic{
-  width:160px;
+  width:100%;
+  max-width:320px;
   aspect-ratio:4/3;
   object-fit:cover;
-  border-radius:10px;
+  border-radius:12px;
   background:#f1e6db;
   display:block;
-  flex:0 0 auto;
+  flex:1 1 320px;
 }
-.example-box .writing-pic{margin-bottom:10px;}
+.example-box .writing-pic{max-width:280px;}
+.writing-right{
+  flex:1 1 260px;
+  min-width:220px;
+  display:flex;
+  flex-direction:column;
+}
 .word-tag{
+  align-self:flex-start;
   font-weight:800;
   color:#fff;
   background:var(--orange);
-  padding:5px 14px;
+  padding:6px 16px;
   border-radius:999px;
   font-size:16px;
+  margin-bottom:10px;
 }
 .writing-textarea{
   width:100%;
-  min-height:64px;
-  margin-top:10px;
+  flex:1;
+  min-height:120px;
   border:1.5px solid var(--line);
   border-radius:10px;
   padding:10px 12px;

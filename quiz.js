@@ -282,12 +282,14 @@ window.HSK = (function(){
      cho mô tả chữ, dùng chung cơ chế tự thử đuôi file với HSK.imgFallback. */
   function mountSentenceWriting(containerEl, n, imgBase, word, sampleAnswer){
     const block = el('<div class="q-row" style="flex-direction:column;align-items:stretch;">'+
-      '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">'+
-        '<div class="q-num">'+n+'.</div>'+
+      '<div class="q-num">'+n+'.</div>'+
+      '<div class="writing-row">'+
         '<img class="writing-pic" src="'+imgBase+'.webp" data-base="'+imgBase+'" alt="Câu '+n+'" onerror="HSK.imgFallback(this)">'+
-        '<span class="word-tag">'+word+'</span>'+
+        '<div class="writing-right">'+
+          '<span class="word-tag">'+word+'</span>'+
+          '<textarea class="writing-textarea" placeholder="Viết câu của bạn ở đây…"></textarea>'+
+        '</div>'+
       '</div>'+
-      '<textarea class="writing-textarea" placeholder="Viết câu của bạn ở đây…"></textarea>'+
       '<div><button type="button" class="reveal-btn">Xem câu ví dụ</button></div>'+
       '<div class="sample-answer">Câu ví dụ tham khảo: <b>'+sampleAnswer+'</b></div>'+
       '</div>');
