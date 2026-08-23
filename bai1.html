@@ -35,7 +35,7 @@
 
       <!-- Part I -->
       <div class="part">
-        <div class="part-title">第一部分 Part I <span class="locked-badge">🔒 cần đáp án gốc</span></div>
+        <div class="part-title">第一部分 Part I</div>
         <div class="part-instructions">第1–3题：听对话，选择最匹配的图片。每题听两次。 — Nghe hội thoại, chọn hình phù hợp nhất. Mỗi câu nghe 2 lần.</div>
 
         <div class="pic-grid">
@@ -46,7 +46,10 @@
         </div>
 
         <div class="example-box">
-          例如 Ví dụ：男：喂，请问张经理在吗？ 女：他正在开会，您半个小时以后再打，好吗？ → <b>D</b>
+          例如 Ví dụ：<br>
+          男：喂，请问张经理在吗？<br>
+          女：他正在开会，您半个小时以后再打，好吗？<br>
+          <b>→ D</b>
         </div>
 
         <div id="l-p1"></div>
@@ -54,22 +57,27 @@
 
       <!-- Part II -->
       <div class="part">
-        <div class="part-title">第二部分 Part II <span class="locked-badge">🔒 cần đáp án gốc</span></div>
+        <div class="part-title">第二部分 Part II</div>
         <div class="part-instructions">第4–6题：听对话，选择正确答案。每题听两次。</div>
         <div class="example-box">
-          例如：女：我需要搬一些椅子到楼上办公室，你能来帮忙吗？ 男：没问题，我再叫几个人来帮你。 问：他们要把椅子搬到哪儿？
-          A 教室　B 办公室 ✓　C 体育馆
+          例如：<br>
+          女：我需要搬一些椅子到楼上办公室，你能来帮忙吗？<br>
+          男：没问题，我再叫几个人来帮你。<br>
+          问：他们要把椅子搬到哪儿？<br>
+          <b>A 教室　B 办公室 ✓　C 体育馆</b>
         </div>
         <div id="l-p2"></div>
       </div>
 
       <!-- Part III -->
       <div class="part">
-        <div class="part-title">第三部分 Part III <span class="locked-badge">🔒 cần đáp án gốc</span></div>
+        <div class="part-title">第三部分 Part III</div>
         <div class="part-instructions">第7–10题：听一段话，选择正确答案。每题听两次。</div>
         <div class="example-box">
-          例如：那个年轻人刚来公司不久，很有工作热情，人也很聪明。 问：关于那个年轻人，可以知道什么？
-          A 很聪明 ✓　B 是留学生　C 爱踢足球
+          例如：<br>
+          那个年轻人刚来公司不久，很有工作热情，人也很聪明。<br>
+          问：关于那个年轻人，可以知道什么？<br>
+          <b>A 很聪明 ✓　B 是留学生　C 爱踢足球</b>
         </div>
         <div id="l-p3"></div>
       </div>
@@ -169,13 +177,14 @@
 </div>
 
 <script>
-HSK.initTabs('reading');
+HSK.initTabs('listening');
+HSK.bindSingleSelect(document.querySelector('.tab-section[data-tab="listening"]'));
 
 /* ---------------- LISTENING (reference only — one shared audio, no answer key yet) ---------------- */
 function listeningPlaceholderRow(n, opts){
   const optHtml = opts.map((o,i)=>{
     const letter = String.fromCharCode(65+i);
-    return '<button class="opt-btn disabled" disabled>'+letter+' '+o+'</button>';
+    return '<button type="button" class="opt-btn">'+letter+' '+o+'</button>';
   }).join('');
   return '<div class="q-row"><div class="q-num">'+n+'.</div><div class="opt-group">'+optHtml+'</div></div>';
 }
@@ -184,10 +193,10 @@ const lP1 = document.getElementById('l-p1');
 [1,2,3].forEach(n=>{
   lP1.appendChild(HSK.el(
     '<div class="q-row"><div class="q-num">'+n+'.</div><div class="opt-group">' +
-      '<button class="opt-btn disabled" disabled>A</button>' +
-      '<button class="opt-btn disabled" disabled>B</button>' +
-      '<button class="opt-btn disabled" disabled>C</button>' +
-      '<button class="opt-btn disabled" disabled>D</button>' +
+      '<button type="button" class="opt-btn">A</button>' +
+      '<button type="button" class="opt-btn">B</button>' +
+      '<button type="button" class="opt-btn">C</button>' +
+      '<button type="button" class="opt-btn">D</button>' +
     '</div></div>'
   ));
 });

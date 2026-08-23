@@ -298,5 +298,22 @@ window.HSK = (function(){
     containerEl.appendChild(block);
   }
 
-  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback };
+  /* ---------- Chọn đáp án tham khảo cho phần Nghe (chưa có đáp án gốc nên
+     KHÔNG chấm điểm đúng/sai) — chỉ tô cam nút đang chọn trong cùng 1 câu,
+     giống 1 nhóm radio, để học viên đánh dấu lựa chọn của mình khi luyện
+     tập. Dùng event delegation nên gọi 1 lần trên container cha là đủ,
+     không cần gọi lại khi thêm câu hỏi mới vào sau. ---------- */
+  function bindSingleSelect(container){
+    if(!container) return;
+    container.addEventListener('click', function(e){
+      const btn = e.target.closest('.opt-btn');
+      if(!btn || !container.contains(btn)) return;
+      const group = btn.closest('.opt-group');
+      if(!group) return;
+      group.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  }
+
+  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect };
 })();
