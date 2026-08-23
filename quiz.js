@@ -277,12 +277,14 @@ window.HSK = (function(){
   };
 
   /* Render an open-ended "look at the picture, write a sentence with this word" block.
-     Not auto-graded (many valid answers) — gives a textarea + a reveal-on-demand sample answer. */
-  function mountSentenceWriting(containerEl, n, picDescHtml, word, sampleAnswer){
+     Not auto-graded (many valid answers) — gives a textarea + a reveal-on-demand sample
+     answer. imgBase = đường dẫn ảnh KHÔNG có đuôi (vd "images/bai1/28") — ảnh thật thay
+     cho mô tả chữ, dùng chung cơ chế tự thử đuôi file với HSK.imgFallback. */
+  function mountSentenceWriting(containerEl, n, imgBase, word, sampleAnswer){
     const block = el('<div class="q-row" style="flex-direction:column;align-items:stretch;">'+
-      '<div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">'+
+      '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">'+
         '<div class="q-num">'+n+'.</div>'+
-        '<div class="pic-desc">'+picDescHtml+'</div>'+
+        '<img class="writing-pic" src="'+imgBase+'.webp" data-base="'+imgBase+'" alt="Câu '+n+'" onerror="HSK.imgFallback(this)">'+
         '<span class="word-tag">'+word+'</span>'+
       '</div>'+
       '<textarea class="writing-textarea" placeholder="Viết câu của bạn ở đây…"></textarea>'+

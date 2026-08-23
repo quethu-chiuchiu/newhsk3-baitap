@@ -355,6 +355,16 @@ section.card{
 .text-input.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red);font-weight:700;}
 
 .pic-desc{font-size:15.5px;color:var(--ink-soft);flex:1 1 260px;font-style:italic;}
+.writing-pic{
+  width:160px;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  border-radius:10px;
+  background:#f1e6db;
+  display:block;
+  flex:0 0 auto;
+}
+.example-box .writing-pic{margin-bottom:10px;}
 .word-tag{
   font-weight:800;
   color:#fff;
