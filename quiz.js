@@ -170,7 +170,7 @@ window.HSK = (function(){
     }
     const star = document.createElement('div');
     star.className = 'star-q';
-    star.textContent = '★ ' + starText;
+    star.innerHTML = '<span class="star-q-num">'+n+'.</span>' + starText;
     block.appendChild(star);
     const grp = document.createElement('div');
     grp.className = 'opt-group';
@@ -192,7 +192,7 @@ window.HSK = (function(){
     this.registerQuestion(n, answerLetter);
     const star = document.createElement('div');
     star.className = 'star-q';
-    star.textContent = '★ ' + starText;
+    star.innerHTML = '<span class="star-q-num">'+n+'.</span>' + starText;
     blockEl.appendChild(star);
     const grp = document.createElement('div');
     grp.className = 'opt-group';
