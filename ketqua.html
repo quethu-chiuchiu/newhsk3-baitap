@@ -53,16 +53,18 @@ function render(){
     return;
   }
   let html = '<div class="ketqua-table-wrap"><table class="ketqua-table"><thead><tr>' +
-    '<th>Học viên</th><th>Bài</th><th>Thời gian nộp</th><th>Đọc</th><th>Viết P1</th><th></th>' +
+    '<th>Học viên</th><th>Bài</th><th>Thời gian nộp</th><th>Nghe</th><th>Đọc</th><th>Viết P1</th><th></th>' +
     '</tr></thead><tbody>';
   items.forEach((item, idx)=>{
     const d = item.data;
+    const listenScore = d.listening && d.listening.graded ? (d.listening.correct+'/'+d.listening.total) : '—';
     const readScore = d.reading && d.reading.graded ? (d.reading.correct+'/'+d.reading.total) : '—';
     const writeScore = d.writing && d.writing.hanzi && d.writing.hanzi.graded ? (d.writing.hanzi.correct+'/'+d.writing.hanzi.total) : '—';
     html += '<tr>' +
       '<td>'+HSK.escapeHtml(d.hocvien)+'</td>' +
       '<td>'+HSK.escapeHtml(d.lessonName)+'</td>' +
       '<td>'+fmtTime(d.timestamp)+'</td>' +
+      '<td>'+listenScore+'</td>' +
       '<td>'+readScore+'</td>' +
       '<td>'+writeScore+'</td>' +
       '<td class="row-actions">' +

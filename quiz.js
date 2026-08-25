@@ -326,11 +326,11 @@ window.HSK = (function(){
     containerEl.appendChild(block);
   }
 
-  /* ---------- Chọn đáp án tham khảo cho phần Nghe (chưa có đáp án gốc nên
-     KHÔNG chấm điểm đúng/sai) — chỉ tô cam nút đang chọn trong cùng 1 câu,
-     giống 1 nhóm radio, để học viên đánh dấu lựa chọn của mình khi luyện
-     tập. Dùng event delegation nên gọi 1 lần trên container cha là đủ,
-     không cần gọi lại khi thêm câu hỏi mới vào sau. ---------- */
+  /* ---------- Chọn đáp án cho phần Nghe — tô cam nút đang chọn trong cùng
+     1 câu, giống 1 nhóm radio (dùng cho việc đánh dấu lựa chọn, kể cả khi
+     không/chưa có đáp án gốc để chấm). Dùng event delegation nên gọi 1 lần
+     trên container cha là đủ, không cần gọi lại khi thêm câu hỏi mới vào
+     sau. ---------- */
   function bindSingleSelect(container){
     if(!container) return;
     container.addEventListener('click', function(e){
@@ -341,6 +341,101 @@ window.HSK = (function(){
       group.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
     });
+  }
+
+  /* ---------- Đọc file đáp án dạng "1C\n2B\n3A\n..." (số câu dính liền
+     1 chữ cái, mỗi câu 1 dòng) thành object {1:'C', 2:'B', ...}. Dòng nào
+     không đúng định dạng bị bỏ qua thay vì gây lỗi. ---------- */
+  function parseAnswerKey(text){
+    const dict = {};
+    String(text || '').split(/\r?\n/).forEach(function(line){
+      const m = line.trim().match(/^(\d+)\s*([A-Za-z])$/);
+      if(m) dict[m[1]] = m[2].toUpperCase();
+    });
+    return dict;
+  }
+
+  /* ---------- Gắn chấm điểm cho phần Nghe khi ĐÃ có file đáp án gốc
+     (audio/baiN/dap_an_nghe_baiN.txt). Khác với HSK.Quiz (tự dựng DOM câu
+     hỏi), hàm này CHẤM ĐIỂM TRÊN DOM CÓ SẴN — các nút .opt-btn của phần
+     Nghe đã được trang bai*.html tự dựng sẵn với data-q/data-letter, hàm
+     này chỉ cần gắn thêm hành vi chọn (bindSingleSelect) + chấm/làm lại.
+     answersDict = null/undefined nghĩa là CHƯA có đáp án gốc — vẫn cho
+     chọn đáp án bình thường (để đánh dấu), chỉ ẩn thanh chấm điểm.
+     opts: {questionNums:[1..10], scoreBarId, scoreTxtId, gradeBtnId, resetBtnId} */
+  function mountListeningQuiz(scopeSelector, answersDict, opts){
+    const container = document.querySelector(scopeSelector);
+    if(!container) return null;
+    bindSingleSelect(container);
+
+    const questionNums = opts.questionNums || [];
+    const hasKey = !!(answersDict && Object.keys(answersDict).length);
+    let graded = false;
+
+    const scoreBar = opts.scoreBarId ? document.getElementById(opts.scoreBarId) : null;
+    const scoreTxt = opts.scoreTxtId ? document.getElementById(opts.scoreTxtId) : null;
+    const gradeBtn = opts.gradeBtnId ? document.getElementById(opts.gradeBtnId) : null;
+    const resetBtn = opts.resetBtnId ? document.getElementById(opts.resetBtnId) : null;
+
+    if(hasKey && scoreBar) scoreBar.style.display = '';
+
+    function updateLabel(){
+      if(graded || !scoreTxt) return;
+      const answered = questionNums.filter(function(n){
+        return container.querySelector('.opt-btn.selected[data-q="'+n+'"]');
+      }).length;
+      scoreTxt.textContent = 'Đã làm ' + answered + ' / ' + questionNums.length + ' câu';
+    }
+    container.addEventListener('click', function(e){
+      if(e.target.closest('.opt-btn')) updateLabel();
+    });
+
+    function grade(){
+      if(!hasKey) return null;
+      graded = true;
+      let correct = 0;
+      questionNums.forEach(function(n){
+        const ans = answersDict[n];
+        const chosenBtn = container.querySelector('.opt-btn.selected[data-q="'+n+'"]');
+        const chosen = chosenBtn ? chosenBtn.dataset.letter : null;
+        container.querySelectorAll('.opt-btn[data-q="'+n+'"]').forEach(function(btn){
+          btn.classList.add('locked');
+          if(btn.dataset.letter === ans) btn.classList.add('correct');
+          else if(btn === chosenBtn && chosen !== ans) btn.classList.add('wrong');
+        });
+        if(chosen === ans) correct++;
+      });
+      if(scoreTxt) scoreTxt.textContent = 'Kết quả: ' + correct + ' / ' + questionNums.length + ' câu đúng 🎉';
+      return correct;
+    }
+
+    function reset(){
+      graded = false;
+      container.querySelectorAll('.opt-btn').forEach(function(b){
+        b.classList.remove('selected','correct','wrong','locked');
+      });
+      updateLabel();
+    }
+
+    if(gradeBtn) gradeBtn.addEventListener('click', grade);
+    if(resetBtn) resetBtn.addEventListener('click', reset);
+    updateLabel();
+
+    function getSummary(){
+      const answers = {};
+      questionNums.forEach(function(n){
+        const chosenBtn = container.querySelector('.opt-btn.selected[data-q="'+n+'"]');
+        answers[n] = chosenBtn ? chosenBtn.dataset.letter : '';
+      });
+      let correct = null;
+      if(graded){
+        correct = 0;
+        questionNums.forEach(function(n){ if(hasKey && answers[n] === answersDict[n]) correct++; });
+      }
+      return { total: questionNums.length, graded: graded, correct: correct, answers: answers };
+    }
+
+    return { grade: grade, reset: reset, getSummary: getSummary, hasKey: hasKey };
   }
 
   /* ---------- Gom toàn bộ đáp án hiện tại của trang bài học (cả 3 tab
@@ -354,17 +449,15 @@ window.HSK = (function(){
     const result = {
       lessonId: meta && meta.lessonId,
       lessonName: meta && meta.lessonName,
-      listening: [],
+      listening: null,
       reading: null,
       writing: { hanzi: null, sentences: [] }
     };
 
-    document.querySelectorAll('.tab-section[data-tab="listening"] .opt-btn.selected').forEach(function(btn){
-      if(btn.dataset.q) result.listening.push({ q: btn.dataset.q, answer: btn.dataset.letter || btn.textContent.trim().charAt(0) });
-    });
-    result.listening.sort(function(a,b){ return (+a.q) - (+b.q); });
-
     const page = window.HSK_PAGE || {};
+    if(page.listening && typeof page.listening.getSummary === 'function'){
+      result.listening = page.listening.getSummary();
+    }
     if(page.reading && typeof page.reading.getSummary === 'function'){
       result.reading = page.reading.getSummary();
     }
@@ -389,22 +482,18 @@ window.HSK = (function(){
      object kết quả (dạng trả về bởi collectResult, cộng thêm .hocvien và
      .timestamp do trang gọi tự gắn vào trước khi lưu/in). Dùng chung cho cả
      index.html (vừa làm xong bài) lẫn ketqua.html (xem lại kết quả đã lưu). */
+  function renderResultSummary(sum){
+    if(!sum) return '<div class="pr-row">(chưa có dữ liệu)</div>';
+    const scoreLine = sum.graded
+      ? '<div class="pr-row"><b>Điểm: '+sum.correct+' / '+sum.total+'</b></div>'
+      : '<div class="pr-row">(chưa chấm điểm)</div>';
+    const rows = Object.keys(sum.answers).map(function(q){
+      return '<div class="pr-row">Câu '+escapeHtml(q)+': <b>'+escapeHtml(sum.answers[q] || '(chưa làm)')+'</b></div>';
+    }).join('');
+    return scoreLine + rows;
+  }
+
   function buildPrintableHtml(data){
-    const listeningRows = (data.listening && data.listening.length)
-      ? data.listening.map(function(x){ return '<div class="pr-row">Câu '+escapeHtml(x.q)+': <b>'+escapeHtml(x.answer)+'</b></div>'; }).join('')
-      : '<div class="pr-row">(chưa chọn câu nào)</div>';
-
-    function renderSummary(sum){
-      if(!sum) return '<div class="pr-row">(chưa có dữ liệu)</div>';
-      const scoreLine = sum.graded
-        ? '<div class="pr-row"><b>Điểm: '+sum.correct+' / '+sum.total+'</b></div>'
-        : '<div class="pr-row">(chưa chấm điểm)</div>';
-      const rows = Object.keys(sum.answers).map(function(q){
-        return '<div class="pr-row">Câu '+escapeHtml(q)+': <b>'+escapeHtml(sum.answers[q] || '(chưa làm)')+'</b></div>';
-      }).join('');
-      return scoreLine + rows;
-    }
-
     const sentenceRows = ((data.writing && data.writing.sentences) || []).map(function(s){
       return '<div class="pr-row">Câu '+escapeHtml(s.q)+': '+escapeHtml(s.text || '(chưa viết)')+'</div>';
     }).join('') || '<div class="pr-row">(chưa viết câu nào)</div>';
@@ -423,12 +512,12 @@ window.HSK = (function(){
       '</style></head><body>' +
       '<h1>Kết quả luyện tập HSK3</h1>' +
       '<div class="meta">Học viên: <b>'+escapeHtml(data.hocvien)+'</b> &nbsp;·&nbsp; Bài: <b>'+escapeHtml(data.lessonName)+'</b> &nbsp;·&nbsp; Thời gian: '+timeStr+'</div>' +
-      '<h2>🎧 Nghe — đáp án đã chọn</h2>' + listeningRows +
-      '<h2>📖 Đọc</h2>' + renderSummary(data.reading) +
-      '<h2>✍️ Viết — Phần I (viết chữ Hán)</h2>' + renderSummary(data.writing && data.writing.hanzi) +
+      '<h2>🎧 Nghe</h2>' + renderResultSummary(data.listening) +
+      '<h2>📖 Đọc</h2>' + renderResultSummary(data.reading) +
+      '<h2>✍️ Viết — Phần I (viết chữ Hán)</h2>' + renderResultSummary(data.writing && data.writing.hanzi) +
       '<h2>✍️ Viết — Phần II (đặt câu)</h2>' + sentenceRows +
       '</body></html>';
   }
 
-  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect, collectResult, escapeHtml, buildPrintableHtml };
+  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect, parseAnswerKey, mountListeningQuiz, collectResult, escapeHtml, buildPrintableHtml };
 })();

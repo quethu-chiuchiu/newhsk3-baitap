@@ -81,6 +81,14 @@
         </div>
         <div id="l-p3"></div>
       </div>
+
+      <div class="score-bar" id="l-score-bar" style="display:none;">
+        <div class="score-panel">
+          <span class="txt" id="l-score">0 / 10 câu</span>
+          <button class="btn btn-primary" id="l-grade">Chấm điểm</button>
+          <button class="btn btn-ghost" id="l-reset">Làm lại</button>
+        </div>
+      </div>
     </section>
   </section>
 
@@ -183,9 +191,8 @@
 
 <script>
 HSK.initTabs('listening');
-HSK.bindSingleSelect(document.querySelector('.tab-section[data-tab="listening"]'));
 
-/* ---------------- LISTENING (reference only — one shared audio, no answer key yet) ---------------- */
+/* ---------------- LISTENING (một audio dùng chung; chấm điểm nếu có file đáp án gốc) ---------------- */
 function listeningPlaceholderRow(n, opts){
   const optHtml = opts.map((o,i)=>{
     const letter = String.fromCharCode(65+i);
@@ -220,6 +227,20 @@ const lP3 = document.getElementById('l-p3');
   {n:9,  opts:["菜很好吃","朋友来了","什么都想尝尝"]},
   {n:10, opts:["两双筷子","两个包子","两碗面条儿"]},
 ].forEach(item=>lP3.appendChild(HSK.el(listeningPlaceholderRow(item.n, item.opts))));
+
+/* Đáp án gốc phần Nghe: audio/bai2/dap_an_nghe_bai2.txt (mỗi dòng "1C","2B",...).
+   Nếu file chưa có (404) thì vẫn cho chọn đáp án bình thường, chỉ ẩn thanh chấm điểm. */
+fetch('audio/bai2/dap_an_nghe_bai2.txt')
+  .then(r => r.ok ? r.text() : Promise.reject())
+  .then(text => HSK.parseAnswerKey(text))
+  .catch(() => null)
+  .then(answersDict => {
+    window.HSK_PAGE = window.HSK_PAGE || {};
+    window.HSK_PAGE.listening = HSK.mountListeningQuiz('.tab-section[data-tab="listening"]', answersDict, {
+      questionNums: [1,2,3,4,5,6,7,8,9,10],
+      scoreBarId: 'l-score-bar', scoreTxtId: 'l-score', gradeBtnId: 'l-grade', resetBtnId: 'l-reset'
+    });
+  });
 
 /* ---------------- READING (interactive, auto-graded) ---------------- */
 const quiz = new HSK.Quiz({scoreTxtId:'r-score', gradeBtnId:'r-grade', resetBtnId:'r-reset'});
