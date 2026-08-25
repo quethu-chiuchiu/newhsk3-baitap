@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="quiz.js"></script>
 </head>
 <body>
 
@@ -19,6 +20,7 @@
       Luyện Tập HSK3
     </div>
     <!-- lesson buttons injected by JS from LESSONS list below -->
+    <a href="ketqua.html" target="_blank" class="lesson-btn results-link" style="margin-top:auto;text-align:center;">📋 Kết quả đã lưu</a>
   </aside>
 
   <div class="content-area">
@@ -27,6 +29,12 @@
         <button class="tab-btn" data-tab="listening">🎧 Nghe</button>
         <button class="tab-btn" data-tab="reading">📖 Đọc</button>
         <button class="tab-btn" data-tab="writing">✍️ Viết</button>
+      </div>
+      <div class="hocvien-bar">
+        <label for="hocvienSelect">Tên học viên:</label>
+        <select id="hocvienSelect"><option value="">— Chọn tên —</option></select>
+        <button type="button" class="btn-submit-result" id="btnSubmitResult">Nộp và in kết quả</button>
+        <span class="hocvien-toast" id="hocvienToast"></span>
       </div>
       <span class="current-lesson" id="currentLessonLabel"></span>
     </div>
@@ -105,6 +113,106 @@ function navigate(){
 renderSidebar();
 renderTabs();
 navigate();
+
+/* ================================================================
+   Tên học viên (dropdown) + Nộp và in kết quả
+   Danh sách tên: hocvien/danhsachhocvien.txt (1 tên/dòng, sửa trực tiếp
+   file đó để thêm/xoá học viên — xem hocvien/README.md).
+   Lưu kết quả theo 2 cách cùng lúc:
+     1) localStorage của trình duyệt, ghi đè theo (tên + bài) — xem ketqua.html
+     2) Google Sheet qua Apps Script, nếu đã dán link vào SHEET_WEBAPP_URL
+        bên dưới — xem hocvien/HUONG-DAN-GOOGLE-SHEET.md
+   ================================================================ */
+const SHEET_WEBAPP_URL = ""; // dán link Web App (Apps Script) vào đây sau khi deploy — xem hocvien/HUONG-DAN-GOOGLE-SHEET.md
+
+const hocvienSelect = document.getElementById('hocvienSelect');
+const btnSubmitResult = document.getElementById('btnSubmitResult');
+const hocvienToast = document.getElementById('hocvienToast');
+const LAST_HOCVIEN_KEY = 'hsk3_last_hocvien';
+
+function loadHocVienList(){
+  fetch('hocvien/danhsachhocvien.txt')
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(text=>{
+      const names = text.split('\n').map(s=>s.trim()).filter(Boolean);
+      const lastPicked = localStorage.getItem(LAST_HOCVIEN_KEY) || '';
+      names.forEach(name=>{
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        if(name === lastPicked) opt.selected = true;
+        hocvienSelect.appendChild(opt);
+      });
+    })
+    .catch(()=>{
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'Không tải được danh sách tên';
+      opt.disabled = true;
+      hocvienSelect.appendChild(opt);
+    });
+}
+hocvienSelect.addEventListener('change', ()=>{
+  if(hocvienSelect.value) localStorage.setItem(LAST_HOCVIEN_KEY, hocvienSelect.value);
+});
+
+function collectFromIframe(){
+  try {
+    const win = frame.contentWindow;
+    if(!win || !win.HSK || typeof win.HSK.collectResult !== 'function') return null;
+    return win.HSK.collectResult({ lessonId: state.lesson.id, lessonName: state.lesson.num + ' · ' + state.lesson.nameZh });
+  } catch(e){
+    console.error('Không đọc được đáp án từ bài học:', e);
+    return null;
+  }
+}
+
+function showToast(msg){
+  hocvienToast.textContent = msg;
+  setTimeout(()=>{ if(hocvienToast.textContent === msg) hocvienToast.textContent = ''; }, 4000);
+}
+
+btnSubmitResult.addEventListener('click', ()=>{
+  const hocvien = hocvienSelect.value;
+  if(!hocvien){
+    alert('Vui lòng chọn tên học viên trước khi nộp bài.');
+    return;
+  }
+  const data = collectFromIframe();
+  if(!data){
+    alert('Chưa tải xong nội dung bài học, vui lòng thử lại sau vài giây.');
+    return;
+  }
+  data.hocvien = hocvien;
+  data.timestamp = new Date().toISOString();
+
+  // Phương án 1 — lưu trong trình duyệt, ghi đè theo cặp (tên + bài)
+  const key = 'hsk3_result::' + data.lessonId + '::' + hocvien;
+  localStorage.setItem(key, JSON.stringify(data));
+
+  // Phương án 2 — gửi lên Google Sheet nếu đã cấu hình endpoint (bỏ qua nếu chưa)
+  if(SHEET_WEBAPP_URL){
+    fetch(SHEET_WEBAPP_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data)
+    }).catch(()=>{});
+  }
+
+  // Mở cửa sổ in kết quả (có thể "Lưu thành PDF" thay vì in ra giấy)
+  const printWin = window.open('', '_blank', 'width=800,height=900');
+  if(printWin){
+    printWin.document.write(HSK.buildPrintableHtml(data));
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(()=>{ try{ printWin.print(); }catch(e){} }, 300);
+  }
+
+  showToast('Đã lưu kết quả cho ' + hocvien + ' ✓');
+});
+
+loadHocVienList();
 </script>
 </body>
 </html>

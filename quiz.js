@@ -263,6 +263,30 @@ window.HSK = (function(){
     }
   };
 
+  /* Snapshot of current state for saving/printing results — does NOT force
+     grading. If already graded (this.graded), also includes per-question
+     correct/wrong + total correct count. */
+  Quiz.prototype.getSummary = function(){
+    const self = this;
+    const answers = {};
+    this.questions.forEach(function(q){
+      if(q.type === 'text'){
+        const input = document.querySelector('.text-input[data-q="'+q.n+'"]');
+        answers[q.n] = input ? input.value.trim() : '';
+      } else {
+        answers[q.n] = self.answers[q.n] || '';
+      }
+    });
+    let correct = null;
+    if(this.graded){
+      correct = 0;
+      this.questions.forEach(function(q){
+        if(answers[q.n] === q.ans) correct++;
+      });
+    }
+    return { total: this.questions.length, graded: this.graded, correct: correct, answers: answers };
+  };
+
   Quiz.prototype.bindButtons = function(){
     const self = this;
     if(this.gradeBtnId){
@@ -287,7 +311,7 @@ window.HSK = (function(){
         '<img class="writing-pic" src="'+imgBase+'.webp" data-base="'+imgBase+'" alt="Câu '+n+'" onerror="HSK.imgFallback(this)">'+
         '<div class="writing-right">'+
           '<span class="word-tag">'+word+'</span>'+
-          '<textarea class="writing-textarea" placeholder="Viết câu của bạn ở đây…"></textarea>'+
+          '<textarea class="writing-textarea" data-q="'+n+'" placeholder="Viết câu của bạn ở đây…"></textarea>'+
         '</div>'+
       '</div>'+
       '<div><button type="button" class="reveal-btn">Xem câu ví dụ</button></div>'+
@@ -319,5 +343,92 @@ window.HSK = (function(){
     });
   }
 
-  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect };
+  /* ---------- Gom toàn bộ đáp án hiện tại của trang bài học (cả 3 tab
+     Nghe/Đọc/Viết, kể cả tab đang ẩn — display:none không xóa giá trị DOM)
+     thành 1 object để lưu/in kết quả. Gọi từ trang index.html (frame cha)
+     qua frame.contentWindow.HSK.collectResult(meta).
+     meta: {lessonId, lessonName} — do trang index.html truyền vào.
+     Cần window.HSK_PAGE = {reading: <Quiz>, writingHanzi: <Quiz>} được set
+     sẵn ở cuối <script> của mỗi trang bai*.html. ---------- */
+  function collectResult(meta){
+    const result = {
+      lessonId: meta && meta.lessonId,
+      lessonName: meta && meta.lessonName,
+      listening: [],
+      reading: null,
+      writing: { hanzi: null, sentences: [] }
+    };
+
+    document.querySelectorAll('.tab-section[data-tab="listening"] .opt-btn.selected').forEach(function(btn){
+      if(btn.dataset.q) result.listening.push({ q: btn.dataset.q, answer: btn.dataset.letter || btn.textContent.trim().charAt(0) });
+    });
+    result.listening.sort(function(a,b){ return (+a.q) - (+b.q); });
+
+    const page = window.HSK_PAGE || {};
+    if(page.reading && typeof page.reading.getSummary === 'function'){
+      result.reading = page.reading.getSummary();
+    }
+    if(page.writingHanzi && typeof page.writingHanzi.getSummary === 'function'){
+      result.writing.hanzi = page.writingHanzi.getSummary();
+    }
+    document.querySelectorAll('.tab-section[data-tab="writing"] .writing-textarea').forEach(function(ta){
+      result.writing.sentences.push({ q: ta.dataset.q, text: ta.value.trim() });
+    });
+    result.writing.sentences.sort(function(a,b){ return (+a.q) - (+b.q); });
+
+    return result;
+  }
+
+  function escapeHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  /* Dựng trang HTML kết quả (dùng để mở cửa sổ mới rồi in / lưu PDF) từ 1
+     object kết quả (dạng trả về bởi collectResult, cộng thêm .hocvien và
+     .timestamp do trang gọi tự gắn vào trước khi lưu/in). Dùng chung cho cả
+     index.html (vừa làm xong bài) lẫn ketqua.html (xem lại kết quả đã lưu). */
+  function buildPrintableHtml(data){
+    const listeningRows = (data.listening && data.listening.length)
+      ? data.listening.map(function(x){ return '<div class="pr-row">Câu '+escapeHtml(x.q)+': <b>'+escapeHtml(x.answer)+'</b></div>'; }).join('')
+      : '<div class="pr-row">(chưa chọn câu nào)</div>';
+
+    function renderSummary(sum){
+      if(!sum) return '<div class="pr-row">(chưa có dữ liệu)</div>';
+      const scoreLine = sum.graded
+        ? '<div class="pr-row"><b>Điểm: '+sum.correct+' / '+sum.total+'</b></div>'
+        : '<div class="pr-row">(chưa chấm điểm)</div>';
+      const rows = Object.keys(sum.answers).map(function(q){
+        return '<div class="pr-row">Câu '+escapeHtml(q)+': <b>'+escapeHtml(sum.answers[q] || '(chưa làm)')+'</b></div>';
+      }).join('');
+      return scoreLine + rows;
+    }
+
+    const sentenceRows = ((data.writing && data.writing.sentences) || []).map(function(s){
+      return '<div class="pr-row">Câu '+escapeHtml(s.q)+': '+escapeHtml(s.text || '(chưa viết)')+'</div>';
+    }).join('') || '<div class="pr-row">(chưa viết câu nào)</div>';
+
+    const timeStr = data.timestamp ? new Date(data.timestamp).toLocaleString('vi-VN') : '';
+
+    return '<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>Kết quả — '+escapeHtml(data.hocvien)+'</title>' +
+      '<style>' +
+      'body{font-family:Arial,Helvetica,sans-serif;max-width:720px;margin:30px auto;color:#2a2118;}' +
+      'h1{font-size:20px;margin-bottom:2px;}' +
+      '.meta{color:#5c5148;font-size:13.5px;margin-bottom:20px;}' +
+      'h2{font-size:16px;background:#fff6ef;padding:8px 12px;border-radius:8px;margin-top:26px;}' +
+      '.pr-row{padding:4px;border-bottom:1px solid #f0ddd0;font-size:14px;}' +
+      '.pr-row:last-child{border-bottom:none;}' +
+      '@media print{ body{margin:10px;} }' +
+      '</style></head><body>' +
+      '<h1>Kết quả luyện tập HSK3</h1>' +
+      '<div class="meta">Học viên: <b>'+escapeHtml(data.hocvien)+'</b> &nbsp;·&nbsp; Bài: <b>'+escapeHtml(data.lessonName)+'</b> &nbsp;·&nbsp; Thời gian: '+timeStr+'</div>' +
+      '<h2>🎧 Nghe — đáp án đã chọn</h2>' + listeningRows +
+      '<h2>📖 Đọc</h2>' + renderSummary(data.reading) +
+      '<h2>✍️ Viết — Phần I (viết chữ Hán)</h2>' + renderSummary(data.writing && data.writing.hanzi) +
+      '<h2>✍️ Viết — Phần II (đặt câu)</h2>' + sentenceRows +
+      '</body></html>';
+  }
+
+  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect, collectResult, escapeHtml, buildPrintableHtml };
 })();

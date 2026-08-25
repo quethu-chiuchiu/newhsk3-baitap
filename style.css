@@ -135,10 +135,58 @@ img{max-width:100%;}
   box-shadow:var(--shadow);
 }
 .topbar .current-lesson{
-  margin-left:auto;
   font-size:13px;
   color:var(--ink-soft);
   font-weight:600;
+  white-space:nowrap;
+}
+
+/* Thanh chọn tên học viên + nút Nộp và in kết quả (topbar, index.html) */
+.hocvien-bar{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.hocvien-bar label{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--ink-soft);
+  white-space:nowrap;
+}
+.hocvien-bar select{
+  border:1.5px solid var(--line);
+  border-radius:9px;
+  padding:8px 12px;
+  font-family:inherit;
+  font-size:14px;
+  background:#fff;
+  color:var(--ink);
+  min-width:170px;
+  cursor:pointer;
+}
+.hocvien-bar select:focus{outline:none;border-color:var(--orange-light);}
+.btn-submit-result{
+  border:none;
+  background:var(--orange);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  font-family:inherit;
+  white-space:nowrap;
+  transition:.15s;
+}
+.btn-submit-result:hover{background:var(--orange-dark);}
+.btn-submit-result:disabled{opacity:.5;cursor:not-allowed;background:var(--orange);}
+.hocvien-toast{
+  font-size:12.5px;
+  color:var(--green);
+  font-weight:700;
+  white-space:nowrap;
 }
 
 .frame-wrap{
@@ -168,9 +216,38 @@ img{max-width:100%;}
   }
   .sidebar .brand{padding:0 10px 0 2px;flex:0 0 auto;border-right:1px solid rgba(255,255,255,.25);margin-right:4px;}
   .lesson-btn{flex:0 0 auto;width:auto;white-space:nowrap;}
+  .lesson-btn.results-link{order:99;margin-top:0;margin-left:4px;}
   .topbar{padding:0 12px;height:auto;padding-top:10px;padding-bottom:10px;}
+  .hocvien-bar{margin-left:0;width:100%;order:2;}
+  .hocvien-bar select{flex:1 1 auto;}
   .topbar .current-lesson{margin-left:0;width:100%;order:3;}
 }
+
+/* ---------------------------------------------------------
+   Trang kết quả đã lưu (ketqua.html) + cửa sổ in kết quả
+   --------------------------------------------------------- */
+.ketqua-main{max-width:920px;margin:0 auto;padding:24px 20px 60px;}
+.ketqua-main h1{font-size:24px;font-weight:900;margin:6px 0 4px;}
+.ketqua-main .sub{color:var(--ink-soft);font-size:15px;margin-bottom:22px;}
+.ketqua-table-wrap{overflow-x:auto;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);}
+table.ketqua-table{width:100%;border-collapse:collapse;font-size:14.5px;}
+table.ketqua-table th, table.ketqua-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
+table.ketqua-table th{background:var(--cream);color:var(--ink-soft);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.03em;}
+table.ketqua-table tr:last-child td{border-bottom:none;}
+table.ketqua-table .row-actions{display:flex;gap:6px;}
+table.ketqua-table .row-actions button{
+  border:1.5px solid var(--line);background:#fff;color:var(--ink);
+  padding:6px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+table.ketqua-table .row-actions button:hover{border-color:var(--orange-light);color:var(--orange-dark);}
+table.ketqua-table .row-actions button.danger:hover{border-color:var(--red);color:var(--red);}
+.ketqua-empty{padding:50px 20px;text-align:center;color:var(--ink-soft);font-size:16px;}
+.ketqua-detail{display:none;background:var(--cream);border-radius:12px;padding:16px 18px;margin:10px 0 18px;font-size:14.5px;line-height:1.7;}
+.ketqua-detail.show{display:block;}
+.ketqua-detail h4{margin:0 0 6px;color:var(--orange-dark);font-size:14.5px;}
+.ketqua-detail .row{margin-bottom:10px;}
+.back-link{display:inline-block;margin-bottom:14px;color:var(--orange-dark);font-weight:700;text-decoration:none;font-size:14.5px;}
+.back-link:hover{text-decoration:underline;}
 
 /* ---------------------------------------------------------
    LESSON PAGE LAYOUT (files inside lessons/)

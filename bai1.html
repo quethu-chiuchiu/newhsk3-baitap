@@ -189,7 +189,7 @@ HSK.bindSingleSelect(document.querySelector('.tab-section[data-tab="listening"]'
 function listeningPlaceholderRow(n, opts){
   const optHtml = opts.map((o,i)=>{
     const letter = String.fromCharCode(65+i);
-    return '<button type="button" class="opt-btn">'+letter+' '+o+'</button>';
+    return '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="'+letter+'">'+letter+' '+o+'</button>';
   }).join('');
   return '<div class="q-row"><div class="q-num">'+n+'.</div><div class="opt-group">'+optHtml+'</div></div>';
 }
@@ -198,10 +198,10 @@ const lP1 = document.getElementById('l-p1');
 [1,2,3].forEach(n=>{
   lP1.appendChild(HSK.el(
     '<div class="q-row"><div class="q-num">'+n+'.</div><div class="opt-group">' +
-      '<button type="button" class="opt-btn">A</button>' +
-      '<button type="button" class="opt-btn">B</button>' +
-      '<button type="button" class="opt-btn">C</button>' +
-      '<button type="button" class="opt-btn">D</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="A">A</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="B">B</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="C">C</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="D">D</button>' +
     '</div></div>'
   ));
 });
@@ -297,6 +297,9 @@ HSK.mountSentenceWriting(wP2, 30,
   "images/bai1/30",
   "好像",
   "她好像找不到自己的箱子了。");
+
+/* Cho trang index.html (frame cha) đọc được đáp án khi bấm "Nộp và in kết quả" */
+window.HSK_PAGE = { lessonId: "bai1", lessonName: "Bài 1 · 我们去机场接你们", reading: quiz, writingHanzi: quizW };
 </script>
 </body>
 </html>
