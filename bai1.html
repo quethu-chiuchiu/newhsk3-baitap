@@ -184,6 +184,17 @@
     </section>
   </section>
 
+  <!-- ============ TỪ VỰNG (Vocabulary game) ============ -->
+  <section class="tab-section" data-tab="vocab">
+    <section class="card">
+      <div class="section-head">
+        <div class="icon">📚</div>
+        <h2>Từ vựng <span class="zh">词汇 Vocabulary</span></h2>
+      </div>
+      <div id="vocab-root"></div>
+    </section>
+  </section>
+
   <footer class="lesson-footer">
     Tài liệu tham khảo từ 《新HSK教程3 学练手册》— New HSK Course 3 Workbook.
   </footer>
@@ -321,6 +332,40 @@ HSK.mountSentenceWriting(wP2, 30,
 
 /* Cho trang index.html (frame cha) đọc được đáp án khi bấm "Nộp và in kết quả" */
 window.HSK_PAGE = { lessonId: "bai1", lessonName: "Bài 1 · 我们去机场接你们", reading: quiz, writingHanzi: quizW };
+
+/* ---------------- TỪ VỰNG (game "Đố vui tốc độ") ----------------
+   Danh sách từ vựng chính thức Bài 1 (mục 生词 trong sách). Không liên
+   quan tới Nghe/Đọc/Viết, không tính vào "Nộp và in kết quả"/Google Sheet. */
+const VOCAB_LIST = [
+  {hanzi:"以为", pinyin:"yǐwéi", mean:"cho rằng, nghĩ rằng"},
+  {hanzi:"像", pinyin:"xiàng", mean:"giống, giống như"},
+  {hanzi:"长", pinyin:"zhǎng", mean:"phát triển, lớn lên"},
+  {hanzi:"身高", pinyin:"shēngāo", mean:"chiều cao"},
+  {hanzi:"米", pinyin:"mǐ", mean:"mét (đơn vị đo lường)"},
+  {hanzi:"瘦", pinyin:"shòu", mean:"gầy, ốm"},
+  {hanzi:"接", pinyin:"jiē", mean:"đón"},
+  {hanzi:"行李", pinyin:"xíngli", mean:"hành lý"},
+  {hanzi:"丢", pinyin:"diū", mean:"làm mất, bị mất"},
+  {hanzi:"箱子", pinyin:"xiāngzi", mean:"va li"},
+  {hanzi:"号码", pinyin:"hàomǎ", mean:"số, mã số"},
+  {hanzi:"好像", pinyin:"hǎoxiàng", mean:"dường như, có vẻ như"},
+  {hanzi:"重要", pinyin:"zhòngyào", mean:"quan trọng"},
+  {hanzi:"着急", pinyin:"zháojí", mean:"lo lắng, sốt ruột"},
+  {hanzi:"护照", pinyin:"hùzhào", mean:"hộ chiếu"},
+  {hanzi:"服务台", pinyin:"fúwùtái", mean:"quầy phục vụ"},
+  {hanzi:"应该", pinyin:"yīnggāi", mean:"nên"},
+  {hanzi:"站", pinyin:"zhàn", mean:"đứng"},
+  {hanzi:"中间", pinyin:"zhōngjiān", mean:"ở giữa, trung gian"},
+  {hanzi:"短", pinyin:"duǎn", mean:"ngắn"},
+  {hanzi:"头发", pinyin:"tóufa", mean:"tóc"},
+  {hanzi:"年轻", pinyin:"niánqīng", mean:"trẻ, trẻ tuổi"},
+  {hanzi:"发现", pinyin:"fāxiàn", mean:"phát hiện, tìm thấy"},
+  {hanzi:"不见", pinyin:"bújiàn", mean:"bị mất, không thấy"},
+  {hanzi:"带", pinyin:"dài", mean:"mang, dẫn, đưa"},
+  {hanzi:"帮助", pinyin:"bāngzhù", mean:"giúp, giúp đỡ"},
+  {hanzi:"照片", pinyin:"zhàopiàn", mean:"ảnh (chụp)"}
+];
+HSK.mountVocabGame('#vocab-root', VOCAB_LIST, { lessonId: "bai1" });
 </script>
 </body>
 </html>
