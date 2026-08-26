@@ -39,10 +39,10 @@
         <div class="part-instructions">第1–3题：听对话，选择最匹配的图片。每题听两次。</div>
 
         <div class="pic-grid">
-          <div class="pic-card"><span class="letter">A</span><img src="images/bai2/A.png" data-base="images/bai2/A" alt="A" onerror="HSK.imgFallback(this)"><div class="cap">rót nước/trà vào cốc</div></div>
-          <div class="pic-card"><span class="letter">B</span><img src="images/bai2/B.png" data-base="images/bai2/B" alt="B" onerror="HSK.imgFallback(this)"><div class="cap">nhân viên giao hàng chạy xe máy</div></div>
-          <div class="pic-card"><span class="letter">C</span><img src="images/bai2/C.png" data-base="images/bai2/C" alt="C" onerror="HSK.imgFallback(this)"><div class="cap">đôi đũa gác trên bát</div></div>
-          <div class="pic-card"><span class="letter">D</span><img src="images/bai2/D.png" data-base="images/bai2/D" alt="D" onerror="HSK.imgFallback(this)"><div class="cap">nữ nhân viên đang nghe điện thoại</div></div>
+          <div class="pic-card"><span class="letter">A</span><img src="images/bai2/A.webp" data-base="images/bai2/A" alt="A" onerror="HSK.imgFallback(this)"></div>
+          <div class="pic-card"><span class="letter">B</span><img src="images/bai2/B.webp" data-base="images/bai2/B" alt="B" onerror="HSK.imgFallback(this)"></div>
+          <div class="pic-card"><span class="letter">C</span><img src="images/bai2/C.webp" data-base="images/bai2/C" alt="C" onerror="HSK.imgFallback(this)"></div>
+          <div class="pic-card"><span class="letter">D</span><img src="images/bai2/D.webp" data-base="images/bai2/D" alt="D" onerror="HSK.imgFallback(this)"></div>
         </div>
 
         <div class="example-box">
@@ -184,6 +184,17 @@
     </section>
   </section>
 
+  <!-- ============ TỪ VỰNG (Vocabulary game) ============ -->
+  <section class="tab-section" data-tab="vocab">
+    <section class="card">
+      <div class="section-head">
+        <div class="icon">📚</div>
+        <h2>Từ vựng <span class="zh">词汇 Vocabulary</span></h2>
+      </div>
+      <div id="vocab-root"></div>
+    </section>
+  </section>
+
   <footer class="lesson-footer">
     Tài liệu tham khảo từ 《新HSK教程3 学练手册》— New HSK Course 3 Workbook.
   </footer>
@@ -321,6 +332,41 @@ HSK.mountSentenceWriting(wP2, 30,
 
 /* Cho trang index.html (frame cha) đọc được đáp án khi bấm "Nộp và in kết quả" */
 window.HSK_PAGE = { lessonId: "bai2", lessonName: "Bài 2 · 你们想吃什么就点什么", reading: quiz, writingHanzi: quizW };
+
+/* ---------------- TỪ VỰNG (game "Đố vui tốc độ") ----------------
+   Danh sách từ vựng chính thức Bài 2 (mục 生词 trong sách). Không liên
+   quan tới Nghe/Đọc/Viết, không tính vào "Nộp và in kết quả"/Google Sheet. */
+const VOCAB_LIST = [
+  {hanzi:"菜单", pinyin:"càidān", mean:"thực đơn"},
+  {hanzi:"又", pinyin:"yòu", mean:"lại, vừa"},
+  {hanzi:"饿", pinyin:"è", mean:"đói"},
+  {hanzi:"渴", pinyin:"kě", mean:"khát"},
+  {hanzi:"客气", pinyin:"kèqi", mean:"khách sáo, khách khí"},
+  {hanzi:"饮料", pinyin:"yǐnliào", mean:"đồ uống"},
+  {hanzi:"好久", pinyin:"hǎojiǔ", mean:"lâu, rất lâu"},
+  {hanzi:"服务", pinyin:"fúwù", mean:"phục vụ"},
+  {hanzi:"员", pinyin:"yuán", mean:"đặt sau danh từ hoặc động từ để chỉ người"},
+  {hanzi:"双", pinyin:"shuāng", mean:"đôi"},
+  {hanzi:"筷子", pinyin:"kuàizi", mean:"đũa"},
+  {hanzi:"勺子", pinyin:"sháozi", mean:"thìa"},
+  {hanzi:"碗", pinyin:"wǎn", mean:"bát"},
+  {hanzi:"马上", pinyin:"mǎshàng", mean:"lập tức, ngay lập tức"},
+  {hanzi:"热情", pinyin:"rèqíng", mean:"nhiệt tình"},
+  {hanzi:"尝", pinyin:"cháng", mean:"nếm, thử"},
+  {hanzi:"记", pinyin:"jì", mean:"nhớ, ghi nhớ"},
+  {hanzi:"用", pinyin:"yòng", mean:"dùng, sử dụng"},
+  {hanzi:"鸡", pinyin:"jī", mean:"gà"},
+  {hanzi:"张", pinyin:"zhāng", mean:"tờ, bức (dùng cho giấy, tranh...)"},
+  {hanzi:"不用", pinyin:"búyòng", mean:"không cần"},
+  {hanzi:"选", pinyin:"xuǎn", mean:"chọn, lựa chọn"},
+  {hanzi:"外卖", pinyin:"wàimài", mean:"đồ ăn giao tận nơi, đặt đồ ăn giao tận nơi"},
+  {hanzi:"方便", pinyin:"fāngbiàn", mean:"thuận tiện, tiện lợi"},
+  {hanzi:"蛋糕", pinyin:"dàngāo", mean:"bánh ngọt, bánh kem, bánh ga tô"},
+  {hanzi:"只", pinyin:"zhǐ", mean:"chỉ"},
+  {hanzi:"方便面", pinyin:"fāngbiànmiàn", mean:"mì ăn liền"},
+  {hanzi:"简单", pinyin:"jiǎndān", mean:"đơn giản"}
+];
+HSK.mountVocabGame('#vocab-root', VOCAB_LIST, { lessonId: "bai2" });
 </script>
 </body>
 </html>
