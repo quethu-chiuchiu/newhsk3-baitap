@@ -535,5 +535,150 @@ window.HSK = (function(){
       '</body></html>';
   }
 
-  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect, parseAnswerKey, mountListeningQuiz, collectResult, escapeHtml, buildPrintableHtml };
+  /* ---------- Trò chơi Từ vựng "Đố vui tốc độ" — mỗi câu hiện 1 từ tiếng Trung
+     (chữ Hán + pinyin), chọn đúng nghĩa tiếng Việt trong các lựa chọn trước khi
+     hết giờ. Đúng liên tiếp được combo điểm thưởng, sai/hết giờ mất chuỗi. Điểm
+     cao nhất lưu riêng theo từng bài trong localStorage để tạo động lực chơi lại.
+     KHÔNG liên quan tới Nghe/Đọc/Viết — không tính vào "Nộp và in kết quả"/Sheet.
+     vocabList: [{hanzi, pinyin, mean}, ...] — mean = nghĩa tiếng Việt. Danh sách
+     rỗng hoặc dưới 4 từ → tự hiện thông báo "đang cập nhật", không lỗi.
+     opts: {lessonId} dùng làm khoá lưu điểm cao nhất. ---------- */
+  function mountVocabGame(containerSelector, vocabList, opts){
+    const root = document.querySelector(containerSelector);
+    if(!root) return;
+    const lessonId = (opts && opts.lessonId) || 'bai';
+    const HS_KEY = 'hsk3_vocab_highscore_' + lessonId;
+    const TIME_MS = 8000;
+
+    const list = (vocabList || []).filter(function(w){ return w && w.hanzi && w.mean; });
+
+    if(list.length < 4){
+      root.innerHTML = '<div class="placeholder-box"><div class="big">📚</div>' +
+        'Từ vựng bài này đang được cập nhật, quay lại sau nhé!</div>';
+      return;
+    }
+
+    let order = [], qi = 0, score = 0, streak = 0, correctCount = 0, timer = null, tStart = 0, answered = false;
+
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        const t=a[i]; a[i]=a[j]; a[j]=t;
+      }
+      return a;
+    }
+
+    function getHighScore(){ return parseInt(localStorage.getItem(HS_KEY) || '0', 10); }
+    function setHighScore(v){ localStorage.setItem(HS_KEY, String(v)); }
+
+    function renderStart(){
+      const hs = getHighScore();
+      root.innerHTML =
+        '<div class="vocab-start">' +
+          '<div class="vocab-start-icon">🎮</div>' +
+          '<h3>Đố vui từ vựng tốc độ</h3>' +
+          '<p>'+list.length+' từ · Trả lời đúng nghĩa trước khi hết giờ, đúng liên tiếp được combo điểm thưởng!</p>' +
+          (hs > 0 ? '<div class="vocab-highscore">🏆 Điểm cao nhất: <b>'+hs+'</b></div>' : '') +
+          '<button type="button" class="btn btn-primary vocab-start-btn">Bắt đầu chơi</button>' +
+        '</div>';
+      root.querySelector('.vocab-start-btn').addEventListener('click', startRound);
+    }
+
+    function startRound(){
+      order = shuffle(list);
+      qi = 0; score = 0; streak = 0; correctCount = 0;
+      renderQuestion();
+    }
+
+    function makeOptions(correctWord){
+      const pool = list.filter(function(w){ return w.hanzi !== correctWord.hanzi; });
+      const distractors = shuffle(pool).slice(0, Math.min(3, pool.length)).map(function(w){ return w.mean; });
+      return shuffle(distractors.concat([correctWord.mean]));
+    }
+
+    function renderQuestion(){
+      answered = false;
+      if(qi >= order.length){ renderEnd(); return; }
+      const word = order[qi];
+      const options = makeOptions(word);
+      root.innerHTML =
+        '<div class="vocab-game">' +
+          '<div class="vocab-hud">' +
+            '<span class="vocab-progress">Câu '+(qi+1)+' / '+order.length+'</span>' +
+            '<span class="vocab-score">Điểm: '+score+'</span>' +
+            (streak >= 2 ? '<span class="vocab-streak">🔥 Combo x'+streak+'</span>' : '') +
+          '</div>' +
+          '<div class="vocab-timerbar"><div class="vocab-timerbar-fill"></div></div>' +
+          '<div class="vocab-word">' +
+            '<div class="vocab-hanzi">'+word.hanzi+'</div>' +
+            (word.pinyin ? '<div class="vocab-pinyin">'+word.pinyin+'</div>' : '') +
+          '</div>' +
+          '<div class="vocab-options">' +
+            options.map(function(opt){ return '<button type="button" class="vocab-opt-btn">'+opt+'</button>'; }).join('') +
+          '</div>' +
+        '</div>';
+
+      const fill = root.querySelector('.vocab-timerbar-fill');
+      tStart = Date.now();
+      clearInterval(timer);
+      timer = setInterval(function(){
+        const elapsed = Date.now() - tStart;
+        const pct = Math.max(0, 100 - (elapsed / TIME_MS) * 100);
+        if(fill) fill.style.width = pct + '%';
+        if(elapsed >= TIME_MS){
+          clearInterval(timer);
+          if(!answered) handleAnswer(null, word);
+        }
+      }, 50);
+
+      root.querySelectorAll('.vocab-opt-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if(answered) return;
+          handleAnswer(btn, word);
+        });
+      });
+    }
+
+    function handleAnswer(btnEl, word){
+      answered = true;
+      clearInterval(timer);
+      const isCorrect = !!btnEl && btnEl.textContent === word.mean;
+      root.querySelectorAll('.vocab-opt-btn').forEach(function(b){
+        b.classList.add('locked');
+        if(b.textContent === word.mean) b.classList.add('correct');
+        else if(b === btnEl) b.classList.add('wrong');
+      });
+      if(isCorrect){
+        streak++;
+        correctCount++;
+        const bonus = Math.min(streak, 5) * 2;
+        score += 10 + (streak > 1 ? bonus : 0);
+      } else {
+        streak = 0;
+      }
+      const scoreEl = root.querySelector('.vocab-score');
+      if(scoreEl) scoreEl.textContent = 'Điểm: ' + score;
+      setTimeout(function(){ qi++; renderQuestion(); }, 900);
+    }
+
+    function renderEnd(){
+      const hs = getHighScore();
+      const isNewHigh = score > hs;
+      if(isNewHigh) setHighScore(score);
+      root.innerHTML =
+        '<div class="vocab-end">' +
+          '<div class="vocab-end-icon">'+(isNewHigh ? '🏆' : '🎉')+'</div>' +
+          '<h3>'+(isNewHigh ? 'Kỷ lục mới!' : 'Hoàn thành!')+'</h3>' +
+          '<div class="vocab-end-score">'+score+' điểm</div>' +
+          '<p>Đúng '+correctCount+' / '+order.length+' câu' + (isNewHigh ? '' : ' · Điểm cao nhất: '+hs) + '</p>' +
+          '<button type="button" class="btn btn-primary vocab-again-btn">Chơi lại</button>' +
+        '</div>';
+      root.querySelector('.vocab-again-btn').addEventListener('click', startRound);
+    }
+
+    renderStart();
+  }
+
+  return { el, initTabs, Quiz, mountSentenceWriting, imgFallback, bindSingleSelect, parseAnswerKey, mountListeningQuiz, mountVocabGame, collectResult, escapeHtml, buildPrintableHtml };
 })();

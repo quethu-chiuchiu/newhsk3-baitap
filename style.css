@@ -524,3 +524,88 @@ section.card{
 .btn-ghost:hover{background:rgba(255,255,255,.22);}
 
 footer.lesson-footer{text-align:center;padding:20px 20px 10px;font-size:14.5px;color:var(--ink-soft);}
+
+/* ---------------------------------------------------------
+   Tab Từ vựng — game "Đố vui tốc độ"
+   --------------------------------------------------------- */
+.vocab-start, .vocab-end{
+  text-align:center;
+  padding:50px 20px;
+  max-width:420px;
+  margin:0 auto;
+}
+.vocab-start-icon, .vocab-end-icon{font-size:44px;margin-bottom:10px;}
+.vocab-start h3, .vocab-end h3{margin:0 0 8px;font-size:22px;font-weight:800;color:var(--ink);}
+.vocab-start p{color:var(--ink-soft);font-size:15.5px;margin:0 0 16px;}
+.vocab-highscore{
+  display:inline-block;
+  background:var(--cream);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:6px 16px;
+  font-size:14.5px;
+  font-weight:700;
+  color:var(--orange-dark);
+  margin-bottom:18px;
+}
+.vocab-end-score{font-size:34px;font-weight:900;color:var(--orange);margin:6px 0;}
+.vocab-end p{color:var(--ink-soft);font-size:15px;margin:0 0 18px;}
+
+.vocab-game{max-width:520px;margin:0 auto;}
+.vocab-hud{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.vocab-progress{font-size:14px;color:var(--ink-soft);font-weight:700;}
+.vocab-score{font-size:14px;color:var(--ink);font-weight:800;}
+.vocab-streak{
+  font-size:13px;
+  font-weight:800;
+  color:#fff;
+  background:var(--orange);
+  padding:3px 10px;
+  border-radius:999px;
+}
+.vocab-timerbar{
+  height:8px;
+  background:var(--cream);
+  border-radius:999px;
+  overflow:hidden;
+  margin-bottom:26px;
+}
+.vocab-timerbar-fill{
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg, var(--orange), var(--orange-light));
+  border-radius:999px;
+  transition:width .05s linear;
+}
+.vocab-word{text-align:center;margin-bottom:28px;}
+.vocab-hanzi{
+  font-family:'Noto Sans SC',sans-serif;
+  font-size:56px;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.2;
+}
+.vocab-pinyin{font-size:17px;color:var(--ink-soft);margin-top:4px;}
+.vocab-options{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.vocab-opt-btn{
+  border:1.5px solid var(--line);
+  background:#fff;
+  border-radius:12px;
+  padding:16px 14px;
+  font-size:16px;
+  font-weight:600;
+  color:var(--ink);
+  cursor:pointer;
+  font-family:inherit;
+  transition:.15s;
+  text-align:center;
+}
+.vocab-opt-btn:hover{border-color:var(--orange-light);}
+.vocab-opt-btn.correct{background:var(--green);border-color:var(--green);color:#fff;font-weight:700;}
+.vocab-opt-btn.wrong{background:var(--red);border-color:var(--red);color:#fff;font-weight:700;}
+.vocab-opt-btn.locked{cursor:default;}
+
+@media (max-width:480px){
+  .vocab-hanzi{font-size:44px;}
+  .vocab-options{grid-template-columns:1fr;}
+}
