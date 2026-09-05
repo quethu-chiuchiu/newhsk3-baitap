@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài 8 · 今天我出院了 | HSK3 Luyện Tập</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<script src="./quiz.js"></script>
+</head>
+<body class="lesson-body">
+
+<div class="lesson-main">
+
+  <div class="lesson-heading">
+    <span class="badge">Bài 8 · 模拟测练 Simulated Practice</span>
+    <h1><span class="zh">今天我出院了</span></h1>
+    <p>Hôm nay tôi xuất viện rồi</p>
+  </div>
+
+  <!-- ============ NGHE (Listening) ============ -->
+  <section class="tab-section" data-tab="listening">
+    <section class="card">
+      <div class="section-head">
+        <div class="icon">🎧</div>
+        <h2>Nghe hiểu <span class="zh">一、听力 Listening</span></h2>
+      </div>
+
+      <div class="audio-master">
+        <span class="label">🎧 Audio nghe — cả bài (10 câu)</span>
+        <audio controls preload="none" src="audio/bai8/listening.mp3"></audio>
+      </div>
+
+      <!-- Part I -->
+      <div class="part">
+        <div class="part-title">第一部分 Part I</div>
+        <div class="part-instructions">第1–3题：听对话，选择最匹配的图片。每题听两次。</div>
+
+        <div class="pic-grid">
+          <div class="pic-card"><span class="letter">A</span><img src="images/bai8/A.webp" data-base="images/bai8/A" alt="A" onerror="HSK.imgFallback(this)"></div>
+          <div class="pic-card"><span class="letter">B</span><img src="images/bai8/B.webp" data-base="images/bai8/B" alt="B" onerror="HSK.imgFallback(this)"></div>
+          <div class="pic-card"><span class="letter">C</span><img src="images/bai8/C.webp" data-base="images/bai8/C" alt="C" onerror="HSK.imgFallback(this)"></div>
+          <div class="pic-card"><span class="letter">D</span><img src="images/bai8/D.webp" data-base="images/bai8/D" alt="D" onerror="HSK.imgFallback(this)"></div>
+        </div>
+
+        <div class="example-box">
+          例如 Ví dụ：<br>
+          男：喂，请问张经理在吗？<br>
+          女：他正在开会，您半个小时以后再打，好吗？<br>
+          <b>→ D</b>
+        </div>
+
+        <div id="l-p1"></div>
+      </div>
+
+      <!-- Part II -->
+      <div class="part">
+        <div class="part-title">第二部分 Part II</div>
+        <div class="part-instructions">第4–6题：听对话，选择正确答案。每题听两次。</div>
+        <div class="example-box">
+          例如：<br>
+          女：我需要搬一些椅子到楼上办公室，你能来帮忙吗？<br>
+          男：没问题，我再叫几个人来帮你。<br>
+          问：他们要把椅子搬到哪儿？<br>
+          <b>A 教室　B 办公室 ✓　C 体育馆</b>
+        </div>
+        <div id="l-p2"></div>
+      </div>
+
+      <!-- Part III -->
+      <div class="part">
+        <div class="part-title">第三部分 Part III</div>
+        <div class="part-instructions">第7–10题：听一段话，选择正确答案。每题听两次。</div>
+        <div class="example-box">
+          例如：<br>
+          那个年轻人刚来公司不久，很有工作热情，人也很聪明。<br>
+          问：关于那个年轻人，可以知道什么？<br>
+          <b>A 很聪明 ✓　B 是留学生　C 爱踢足球</b>
+        </div>
+        <div id="l-p3"></div>
+      </div>
+
+      <div class="score-bar" id="l-score-bar" style="display:none;">
+        <div class="score-panel">
+          <span class="txt" id="l-score">0 / 10 câu</span>
+          <button class="btn btn-primary" id="l-grade">Chấm điểm</button>
+          <button class="btn btn-ghost" id="l-reset">Làm lại</button>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============ ĐỌC (Reading) ============ -->
+  <section class="tab-section" data-tab="reading">
+    <section class="card">
+      <div class="section-head">
+        <div class="icon">📖</div>
+        <h2>Đọc hiểu <span class="zh">二、阅读 Reading</span></h2>
+      </div>
+      <p class="section-note">Chọn đáp án rồi bấm <b>“Chấm điểm”</b> ở thanh dưới cùng để tự kiểm tra.</p>
+
+      <!-- Part I -->
+      <div class="part">
+        <div class="part-title">第一部分 Part I</div>
+        <div class="part-instructions">第11–15题：匹配句子。</div>
+        <div class="example-box">
+          <div><b>A</b> 我知道，咱们两点半以前走就行。</div>
+          <div><b>B</b> 好的，我少吃一点儿。</div>
+          <div><b>C</b> 她们都喜欢这么说，因为关心我们。</div>
+          <div><b>D</b> 我记住了，我一定不会吃错的。</div>
+          <div><b>E</b> 当然。我们先坐公交车，然后换地铁。</div>
+          <div><b>F</b> 有个好的习惯，身体一定会越来越好的。</div>
+          <div style="margin-top:8px;">例如：你知道怎么去国家图书馆吗？ → <b>E</b></div>
+        </div>
+        <div id="r-p1"></div>
+      </div>
+
+      <!-- Part II -->
+      <div class="part">
+        <div class="part-title">第二部分 Part II</div>
+        <div class="part-instructions">第16–20题：选词填空。</div>
+        <div class="example-box">
+          <b>A</b> 其他　<b>B</b> 常　<b>C</b> 注意　<b>D</b> 心里　<b>E</b> 鞋　<b>F</b> 担心
+          <div style="margin-top:8px;">例如：中间那双（ E ）是谁的？</div>
+        </div>
+        <div id="r-p2"></div>
+      </div>
+
+      <!-- Part III -->
+      <div class="part">
+        <div class="part-title">第三部分 Part III</div>
+        <div class="part-instructions">第21–24题：选择正确答案。</div>
+        <div id="r-p3"></div>
+      </div>
+
+      <div class="score-bar">
+        <div class="score-panel">
+          <span class="txt" id="r-score">0 / 14 câu</span>
+          <button class="btn btn-primary" id="r-grade">Chấm điểm</button>
+          <button class="btn btn-ghost" id="r-reset">Làm lại</button>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============ VIẾT (Writing) ============ -->
+  <section class="tab-section" data-tab="writing">
+    <section class="card">
+      <div class="section-head">
+        <div class="icon">✍️</div>
+        <h2>Viết <span class="zh">三、书写 Writing</span></h2>
+      </div>
+
+      <!-- Part I -->
+      <div class="part">
+        <div class="part-title">第一部分 Part I</div>
+        <div class="part-instructions">第25–27题：根据拼音写汉字。 — Viết chữ Hán đúng theo pinyin cho sẵn, rồi bấm "Chấm điểm".</div>
+        <div class="example-box">例如：咱们一会儿（ dǎ <b>打</b> ）车回家吧。</div>
+        <div id="w-p1"></div>
+
+        <div class="score-bar">
+          <div class="score-panel">
+            <span class="txt" id="w-score">0 / 3 câu</span>
+            <button class="btn btn-primary" id="w-grade">Chấm điểm</button>
+            <button class="btn btn-ghost" id="w-reset">Làm lại</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part II -->
+      <div class="part">
+        <div class="part-title">第二部分 Part II</div>
+        <div class="part-instructions">第28–30题：看图，用词造句。 — Phần này có nhiều cách viết đúng nên không tự chấm điểm, bấm "Xem câu ví dụ" để đối chiếu.</div>
+        <div class="example-box">
+          <div class="writing-row">
+            <img class="writing-pic" src="images/bai8/vd.webp" data-base="images/bai8/vd" alt="Ví dụ" onerror="HSK.imgFallback(this)">
+            <div class="writing-right" style="justify-content:center;">例如：开心 → 他开心得跳起来了。</div>
+          </div>
+        </div>
+        <div id="w-p2"></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============ TỪ VỰNG (Vocabulary game) ============ -->
+  <section class="tab-section" data-tab="vocab">
+    <section class="card">
+      <div class="section-head">
+        <div class="icon">📚</div>
+        <h2>Từ vựng <span class="zh">词汇 Vocabulary</span></h2>
+      </div>
+      <div id="vocab-root"></div>
+    </section>
+  </section>
+
+  <footer class="lesson-footer">
+    Tài liệu tham khảo từ 《新HSK教程3 学练手册》— New HSK Course 3 Workbook.
+  </footer>
+</div>
+
+<script>
+HSK.initTabs('listening');
+
+/* ---------------- LISTENING (một audio dùng chung; chấm điểm nếu có file đáp án gốc) ---------------- */
+function listeningPlaceholderRow(n, opts){
+  const optHtml = opts.map((o,i)=>{
+    const letter = String.fromCharCode(65+i);
+    return '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="'+letter+'">'+letter+' '+o+'</button>';
+  }).join('');
+  return '<div class="q-row"><div class="q-num">'+n+'.</div><div class="opt-group">'+optHtml+'</div></div>';
+}
+
+const lP1 = document.getElementById('l-p1');
+[1,2,3].forEach(n=>{
+  lP1.appendChild(HSK.el(
+    '<div class="q-row"><div class="q-num">'+n+'.</div><div class="opt-group">' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="A">A</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="B">B</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="C">C</button>' +
+      '<button type="button" class="opt-btn" data-q="'+n+'" data-letter="D">D</button>' +
+    '</div></div>'
+  ));
+});
+
+const lP2 = document.getElementById('l-p2');
+[
+  {n:4, opts:["住院","出院","看病"]},
+  {n:5, opts:["还可以","生病了","去医院了"]},
+  {n:6, opts:["去看老师","给同学们写信","在家休息一周"]},
+].forEach(item=>lP2.appendChild(HSK.el(listeningPlaceholderRow(item.n, item.opts))));
+
+const lP3 = document.getElementById('l-p3');
+[
+  {n:7,  opts:["身体不好","一直喜欢运动","现在会跑步和游泳"]},
+  {n:8,  opts:["生病了","发高烧","回学校了"]},
+  {n:9,  opts:["家里没药了","头也开始疼了","晚上睡得不好"]},
+  {n:10, opts:["不用来医院","不用做检查","不要自己吃药"]},
+].forEach(item=>lP3.appendChild(HSK.el(listeningPlaceholderRow(item.n, item.opts))));
+
+/* Đáp án gốc phần Nghe: audio/bai8/dap_an_nghe_bai8.txt (mỗi dòng "1C","2B",...).
+   Nếu file chưa có (404) thì vẫn cho chọn đáp án bình thường, chỉ ẩn thanh chấm điểm. */
+fetch('audio/bai8/dap_an_nghe_bai8.txt')
+  .then(r => r.ok ? r.text() : Promise.reject())
+  .then(text => HSK.parseAnswerKey(text))
+  .catch(() => null)
+  .then(answersDict => {
+    window.HSK_PAGE = window.HSK_PAGE || {};
+    window.HSK_PAGE.listening = HSK.mountListeningQuiz('.tab-section[data-tab="listening"]', answersDict, {
+      questionNums: [1,2,3,4,5,6,7,8,9,10],
+      scoreBarId: 'l-score-bar', scoreTxtId: 'l-score', gradeBtnId: 'l-grade', resetBtnId: 'l-reset'
+    });
+  });
+
+/* ---------------- READING (interactive, auto-graded) ---------------- */
+const quiz = new HSK.Quiz({scoreTxtId:'r-score', gradeBtnId:'r-grade', resetBtnId:'r-reset'});
+
+// Part I — match sentences
+const p1Opts = {
+  A:"我知道，咱们两点半以前走就行。",
+  B:"好的，我少吃一点儿。",
+  C:"她们都喜欢这么说，因为关心我们。",
+  D:"我记住了，我一定不会吃错的。",
+  E:"当然。我们先坐公交车，然后换地铁。",
+  F:"有个好的习惯，身体一定会越来越好的。"
+};
+const rP1 = document.getElementById('r-p1');
+[
+  {n:11, q:"你不能再吃冰激凌了，吃多了会不舒服。", ans:"B"},
+  {n:12, q:"明天下午三点要去医院做检查。", ans:"A"},
+  {n:13, q:"我差不多运动了半年，现在健康多了。", ans:"F"},
+  {n:14, q:"这种药饭前吃，那种药饭后吃。", ans:"D"},
+  {n:15, q:"我妈妈常说，多吃饭身体才能健康。", ans:"C"},
+].forEach(item=>quiz.mountMatch(rP1, item.n, item.q, p1Opts, item.ans));
+
+// Part II — fill in the blank
+const p2Opts = {A:"其他",B:"常",C:"注意",D:"心里",F:"担心"};
+const rP2 = document.getElementById('r-p2');
+[
+  {n:16, q:"医生说吃药的时候要（　）时间和方法。", ans:"C"},
+  {n:17, q:"你别（　），我没事，睡一觉就好了。", ans:"F"},
+  {n:18, q:"虽然她没说，但我知道她（　）一定很难过。", ans:"D"},
+  {n:19, q:"A：我发现你（　）来体育馆跑步。 B：对，我每天下课以后都来跑一个小时步。", ans:"B"},
+  {n:20, q:"A：除了羽毛球以外，你还喜欢（　）运动吗？ B：我什么运动都喜欢。", ans:"A"},
+].forEach(item=>quiz.mountFillBlank(rP2, item.n, item.q, p2Opts, item.ans));
+
+// Part III — passage + MCQ
+const rP3 = document.getElementById('r-p3');
+quiz.mountMCQBlock(rP3, 21,
+  "前几天妈妈发烧了，这几天她头疼，也没睡好。今天早上妈妈去医院了，医生给她开了药，让她多休息。",
+  "妈妈为什么去医院？",
+  {A:"一直不舒服",B:"孩子生病了",C:"今天发烧了"}, "A");
+
+quiz.mountMCQBlock(rP3, 22,
+  "张先生感冒以后没有去医院，他吃了两天药，今天觉得身体好多了。他准备明天去上班。",
+  "关于张先生，可以知道什么？",
+  {A:"感冒了",B:"去医院了",C:"明天不上班"}, "A");
+
+const sharedBlock = quiz.mountMCQBlock(rP3, 23,
+  "<span class='passage-num'>23~24.</span> 我爸爸以前不太喜欢运动，喜欢吃肉、喝饮料，今年他突然胖了不少。检查身体的时候医生告诉他，如果再胖下去，就会生病。最近他开始每天早上跑步，晚上也不吃太多。他现在不但自己运动，而且还常告诉我们要注意健康。",
+  "爸爸为什么开始跑步？",
+  {A:"他喜欢运动",B:"他不想生病",C:"家人让他跑步"}, "B");
+
+quiz.appendMCQToBlock(sharedBlock, 24,
+  "关于爸爸，可以知道什么？",
+  {A:"生病了",B:"不吃肉了",C:"开始注意健康了"}, "C");
+
+quiz.bindButtons();
+
+/* ---------------- WRITING (书写) ---------------- */
+const quizW = new HSK.Quiz({scoreTxtId:'w-score', gradeBtnId:'w-grade', resetBtnId:'w-reset'});
+const wP1 = document.getElementById('w-p1');
+quizW.mountHanzi(wP1, 25, "我一直很担（　）爷爷的身体。", "xīn", "心");
+quizW.mountHanzi(wP1, 26, "虽然问题有很多，但是方（　）更多。", "fǎ", "法");
+quizW.mountHanzi(wP1, 27, "医生说我不能吃这种药，（　）他的药都可以吃。", "qí", "其");
+quizW.bindButtons();
+
+const wP2 = document.getElementById('w-p2');
+HSK.mountSentenceWriting(wP2, 28,
+  "images/bai8/28",
+  "差不多",
+  "这件事我们差不多做完了。");
+HSK.mountSentenceWriting(wP2, 29,
+  "images/bai8/29",
+  "发烧",
+  "孩子昨晚发烧了，妈妈很担心。");
+HSK.mountSentenceWriting(wP2, 30,
+  "images/bai8/30",
+  "健康",
+  "一家人经常一起运动，身体很健康。");
+
+/* Cho trang index.html (frame cha) đọc được đáp án khi bấm "Nộp và in kết quả" */
+window.HSK_PAGE = { lessonId: "bai8", lessonName: "Bài 8 · 今天我出院了", reading: quiz, writingHanzi: quizW };
+
+/* ---------------- TỪ VỰNG (game "Đố vui tốc độ") ----------------
+   Danh sách từ vựng chính thức Bài 8 (mục 生词 trong sách). Không liên
+   quan tới Nghe/Đọc/Viết, không tính vào "Nộp và in kết quả"/Google Sheet. */
+const VOCAB_LIST = [
+  {hanzi:"最近", pinyin:"zuìjìn", mean:"gần đây"},
+  {hanzi:"常", pinyin:"cháng", mean:"thường, thường xuyên"},
+  {hanzi:"体育馆", pinyin:"tǐyùguǎn", mean:"nhà thi đấu"},
+  {hanzi:"习惯", pinyin:"xíguàn", mean:"thói quen, quen với"},
+  {hanzi:"胖", pinyin:"pàng", mean:"béo"},
+  {hanzi:"健康", pinyin:"jiànkāng", mean:"khoẻ mạnh"},
+  {hanzi:"以后", pinyin:"yǐhòu", mean:"sau, sau này, về sau"},
+  {hanzi:"羽毛球", pinyin:"yǔmáoqiú", mean:"cầu lông"},
+  {hanzi:"耳朵", pinyin:"ěrduo", mean:"tai"},
+  {hanzi:"感冒", pinyin:"gǎnmào", mean:"bị cảm, cảm"},
+  {hanzi:"发烧", pinyin:"fāshāo", mean:"sốt"},
+  {hanzi:"低", pinyin:"dī", mean:"thấp"},
+  {hanzi:"关心", pinyin:"guānxīn", mean:"quan tâm"},
+  {hanzi:"注意", pinyin:"zhùyì", mean:"chú ý"},
+  {hanzi:"突然", pinyin:"tūrán", mean:"đột nhiên, đột ngột"},
+  {hanzi:"住院", pinyin:"zhùyuàn", mean:"nằm viện"},
+  {hanzi:"担心", pinyin:"dānxīn", mean:"lo lắng"},
+  {hanzi:"腿", pinyin:"tuǐ", mean:"chân"},
+  {hanzi:"病人", pinyin:"bìngrén", mean:"bệnh nhân"},
+  {hanzi:"差不多", pinyin:"chàbuduō", mean:"gần như, tương tự, xấp xỉ"},
+  {hanzi:"得", pinyin:"děi", mean:"phải, cần"},
+  {hanzi:"开心", pinyin:"kāixīn", mean:"vui vẻ"},
+  {hanzi:"出院", pinyin:"chūyuàn", mean:"xuất viện"},
+  {hanzi:"开", pinyin:"kāi", mean:"kê (đơn thuốc)"},
+  {hanzi:"种", pinyin:"zhǒng", mean:"loại"},
+  {hanzi:"方法", pinyin:"fāngfǎ", mean:"phương pháp"},
+  {hanzi:"其他", pinyin:"qítā", mean:"khác"},
+  {hanzi:"心里", pinyin:"xīnlǐ", mean:"trong lòng"}
+];
+HSK.mountVocabGame('#vocab-root', VOCAB_LIST, { lessonId: "bai8" });
+</script>
+</body>
+</html>
