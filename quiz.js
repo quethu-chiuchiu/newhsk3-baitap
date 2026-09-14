@@ -612,7 +612,6 @@ window.HSK = (function(){
           '<div class="vocab-timerbar"><div class="vocab-timerbar-fill"></div></div>' +
           '<div class="vocab-word">' +
             '<div class="vocab-hanzi">'+word.hanzi+'</div>' +
-            (word.pinyin ? '<div class="vocab-pinyin">'+word.pinyin+'</div>' : '') +
           '</div>' +
           '<div class="vocab-options">' +
             options.map(function(opt){ return '<button type="button" class="vocab-opt-btn">'+opt+'</button>'; }).join('') +
