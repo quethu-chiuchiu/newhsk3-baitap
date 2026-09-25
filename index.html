@@ -20,7 +20,7 @@
       Luyện Tập HSK3
     </div>
     <!-- lesson buttons injected by JS from LESSONS list below -->
-    <a href="ketqua.html" target="_blank" class="lesson-btn results-link" style="margin-top:auto;text-align:center;">📋 Kết quả đã lưu</a>
+    <a href="ketqua.html" target="_blank" class="lesson-btn results-link" style="order:1;margin-top:auto;text-align:center;">📋 Kết quả đã lưu</a>
   </aside>
 
   <div class="content-area">
@@ -75,8 +75,7 @@ function renderSidebar(){
   LESSONS.forEach(lesson=>{
     const btn = document.createElement('button');
     btn.className = 'lesson-btn' + (lesson.available ? '' : ' soon') + (lesson.id === state.lesson.id ? ' active' : '');
-    btn.innerHTML = '<div class="num">'+lesson.num+'</div>' +
-      '<div class="name">'+lesson.nameVi+'<span class="zh">'+lesson.nameZh+'</span></div>';
+    btn.innerHTML = '<div class="num">'+lesson.num+'</div>';
     if(lesson.available){
       btn.addEventListener('click', ()=>selectLesson(lesson.id));
     } else {
