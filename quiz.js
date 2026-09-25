@@ -129,7 +129,7 @@ window.HSK = (function(){
     const exp = document.createElement('div');
     exp.className = 'explain';
     exp.id = 'exp-' + n;
-    exp.innerHTML = 'Đáp án: <b>'+answerLetter+'</b> — “'+optionsDict[answerLetter]+'”';
+    exp.innerHTML = 'Đáp án: <b>'+answerLetter+'</b> — "'+optionsDict[answerLetter]+'"';
     row.appendChild(exp);
     containerEl.appendChild(row);
   };
@@ -484,29 +484,6 @@ window.HSK = (function(){
      object kết quả (dạng trả về bởi collectResult, cộng thêm .hocvien và
      .timestamp do trang gọi tự gắn vào trước khi lưu/in). Dùng chung cho cả
      index.html (vừa làm xong bài) lẫn ketqua.html (xem lại kết quả đã lưu). */
-  function renderResultSummary(sum){
-    if(!sum) return '<div class="pr-row">(chưa có dữ liệu)</div>';
-    const scoreLine = sum.graded
-      ? '<div class="pr-row"><b>Điểm: '+sum.correct+' / '+sum.total+'</b></div>'
-      : '<div class="pr-row">(chưa chấm điểm)</div>';
-    const rows = Object.keys(sum.answers).map(function(q){
-      const chosen = sum.answers[q] || '';
-      const correctAns = sum.answerKey ? sum.answerKey[q] : null;
-      let line = 'Câu '+escapeHtml(q)+': <b>'+escapeHtml(chosen || '(chưa làm)')+'</b>';
-      if(correctAns){
-        if(sum.graded){
-          line += (chosen === correctAns)
-            ? ' <span style="color:#2f9e56;">✓ đúng</span>'
-            : ' <span style="color:#d13c2f;">✗ (đáp án đúng: '+escapeHtml(correctAns)+')</span>';
-        } else {
-          line += ' <span style="color:#5c5148;">(đáp án đúng: '+escapeHtml(correctAns)+')</span>';
-        }
-      }
-      return '<div class="pr-row">'+line+'</div>';
-    }).join('');
-    return scoreLine + rows;
-  }
-
   function buildPrintableHtml(data){
     const sentenceRows = ((data.writing && data.writing.sentences) || []).map(function(s){
       let line = 'Câu '+escapeHtml(s.q)+': '+escapeHtml(s.text || '(chưa viết)');
@@ -533,6 +510,29 @@ window.HSK = (function(){
       '<h2>✍️ Viết — Phần I (viết chữ Hán)</h2>' + renderResultSummary(data.writing && data.writing.hanzi) +
       '<h2>✍️ Viết — Phần II (đặt câu)</h2>' + sentenceRows +
       '</body></html>';
+  }
+
+  function renderResultSummary(sum){
+    if(!sum) return '<div class="pr-row">(chưa có dữ liệu)</div>';
+    const scoreLine = sum.graded
+      ? '<div class="pr-row"><b>Điểm: '+sum.correct+' / '+sum.total+'</b></div>'
+      : '<div class="pr-row">(chưa chấm điểm)</div>';
+    const rows = Object.keys(sum.answers).map(function(q){
+      const chosen = sum.answers[q] || '';
+      const correctAns = sum.answerKey ? sum.answerKey[q] : null;
+      let line = 'Câu '+escapeHtml(q)+': <b>'+escapeHtml(chosen || '(chưa làm)')+'</b>';
+      if(correctAns){
+        if(sum.graded){
+          line += (chosen === correctAns)
+            ? ' <span style="color:#2f9e56;">✓ đúng</span>'
+            : ' <span style="color:#d13c2f;">✗ (đáp án đúng: '+escapeHtml(correctAns)+')</span>';
+        } else {
+          line += ' <span style="color:#5c5148;">(đáp án đúng: '+escapeHtml(correctAns)+')</span>';
+        }
+      }
+      return '<div class="pr-row">'+line+'</div>';
+    }).join('');
+    return scoreLine + rows;
   }
 
   /* ---------- Trò chơi Từ vựng "Đố vui tốc độ" — mỗi câu hiện 1 từ tiếng Trung
